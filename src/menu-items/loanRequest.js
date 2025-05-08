@@ -19,6 +19,7 @@ const loanRequests = {
       icon: icons.IconRouteSquare,
       breadcrumbs: false
     },
+    
     {
       id: 'createLoanRequest',
       title: 'Create Loan Request',
@@ -26,7 +27,7 @@ const loanRequests = {
       url: '/loan-request/create',
       icon: icons.IconPlus,
       breadcrumbs: false
-    }
+    },
   ]
 };
 

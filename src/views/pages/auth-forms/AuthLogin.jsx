@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
@@ -17,14 +17,56 @@ import Box from '@mui/material/Box';
 
 // project imports
 import AnimateButton from 'ui-component/extended/AnimateButton';
+import { supabase } from '../../../service/supabase';
 
 // assets
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { Alert } from '@mui/material';
 
 // ===============================|| JWT - LOGIN ||=============================== //
 
 export default function AuthLogin() {
+
+  const navigate = useNavigate()
+
+  const [email, setEmail] = useState('')
+  const [password, setPass] = useState('')
+  const [session, setSession] = useState(null)
+  const [error, setError] = useState('')
+
+  async function loginFunc() {
+
+    try {
+      let { data, error } = await supabase.auth.signInWithPassword({
+        email: email,
+        password: password
+      })
+
+      if (error) throw error
+        if (data) {
+        navigate('/dashboard/default')
+      } 
+
+      
+    } catch (err) {
+      setError(err.message || 'An unexpected error occurred. Please try again.');
+      console.log(error);
+      
+    }
+
+  }
+
+  useEffect(() => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session)
+    })
+    return () => subscription.unsubscribe()
+  }, [])
+
+  
   const theme = useTheme();
 
   const [checked, setChecked] = useState(true);
@@ -40,9 +82,15 @@ export default function AuthLogin() {
 
   return (
     <>
+
+{error && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {error}
+        </Alert>
+      )}
       <FormControl fullWidth sx={{ ...theme.typography.customInput }}>
         <InputLabel htmlFor="outlined-adornment-email-login">Email Address / Username</InputLabel>
-        <OutlinedInput id="outlined-adornment-email-login" type="email" value="info@codedthemes.com" name="email" inputProps={{}} />
+        <OutlinedInput id="outlined-adornment-email-login" type="email" value={email} name="email" inputProps={{}} onChange={(e) =>setEmail(e.target.value)} />
       </FormControl>
 
       <FormControl fullWidth sx={{ ...theme.typography.customInput }}>
@@ -50,8 +98,9 @@ export default function AuthLogin() {
         <OutlinedInput
           id="outlined-adornment-password-login"
           type={showPassword ? 'text' : 'password'}
-          value="123456"
+          value={password}
           name="password"
+          onChange={(e) => setPass(e.target.value)}
           endAdornment={
             <InputAdornment position="end">
               <IconButton
@@ -85,7 +134,7 @@ export default function AuthLogin() {
       </Grid>
       <Box sx={{ mt: 2 }}>
         <AnimateButton>
-          <Button color="secondary" fullWidth size="large" type="submit" variant="contained">
+          <Button color="secondary" fullWidth size="large" type="submit" variant="contained" onClick={loginFunc}>
             Sign In
           </Button>
         </AnimateButton>

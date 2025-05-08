@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useContext } from 'react';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
@@ -27,10 +27,14 @@ import Box from '@mui/material/Box';
 import MainCard from 'ui-component/cards/MainCard';
 import Transitions from 'ui-component/extended/Transitions';
 import useConfig from 'hooks/useConfig';
+// import { AppContext } from '../../../../contexts/AuthContext';
 
 // assets
 import User1 from 'assets/images/users/user-round.svg';
 import { IconLogout, IconSearch, IconSettings, IconUser } from '@tabler/icons-react';
+import { supabase } from '../../../../service/supabase';
+import { Button } from '@mui/material';
+import { useNavigate } from 'react-router';
 
 // ==============================|| PROFILE MENU ||============================== //
 
@@ -42,6 +46,31 @@ export default function ProfileSection() {
   const [notification, setNotification] = useState(false);
   const [selectedIndex] = useState(-1);
   const [open, setOpen] = useState(false);
+  const [user, setUser] = useState('')
+  const navigate = useNavigate()
+
+  // const { user, loadingUser, userError, refreshUser } = useContext(AppContext);
+
+  async function fetchUser() {
+    const {data, error} = await supabase.auth.getUser()
+
+    if(data) {
+      
+      setUser(data.user.user_metadata.first_name)
+      
+    }
+  }
+
+  async function logoutFunc() {
+    const { error } = await supabase.auth.signOut()
+    if(error) throw error
+
+    navigate('/login')
+  }
+  useEffect(() => {
+    fetchUser()
+  }, [])
+
 
   /**
    * anchorRef is used on different components and specifying one type leads to other components throwing an error
@@ -131,7 +160,7 @@ export default function ProfileSection() {
                         <Stack direction="row" spacing={0.5} sx={{ alignItems: 'center' }}>
                           <Typography variant="h4">Good Morning,</Typography>
                           <Typography component="span" variant="h4" sx={{ fontWeight: 400 }}>
-                            Johne Doe
+                            {user}
                           </Typography>
                         </Stack>
                         <Typography variant="subtitle2">Project Admin</Typography>
@@ -193,7 +222,11 @@ export default function ProfileSection() {
                           <ListItemIcon>
                             <IconLogout stroke={1.5} size="20px" />
                           </ListItemIcon>
-                          <ListItemText primary={<Typography variant="body2">Logout</Typography>} />
+                          <ListItemText primary={<Typography variant="body2">
+                            <Button onClick={logoutFunc}>
+                            Logout
+                              </Button>
+                            </Typography>} />
                         </ListItemButton>
                       </List>
                     </Box>

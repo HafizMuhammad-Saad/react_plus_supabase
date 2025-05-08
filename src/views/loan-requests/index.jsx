@@ -10,11 +10,16 @@ import {
   Chip,
   IconButton,
   Box,
-  Typography
+  Typography,
+  Button
 } from '@mui/material';
 import { IconEye } from '@tabler/icons-react';
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
+import { supabase } from '../../service/supabase';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router';
+import { useAuth } from '../../contexts/AuthContext';
 
 // ==============================|| LOAN REQUESTS PAGE ||============================== //
 
@@ -46,6 +51,13 @@ const LoanRequests = () => {
       date: '2024-03-18'
     }
   ];
+  const {user} = useAuth()
+
+  const [loanReq, setLoanReq] = useState([])
+
+  const navigate = useNavigate()
+
+
 
   const getStatusColor = (status) => {
     switch (status.toLowerCase()) {
@@ -58,6 +70,38 @@ const LoanRequests = () => {
       default:
         return 'default';
     }
+  };
+
+  async function fetchLoanRequests() {
+
+
+
+    try {
+
+      // const {data: {user}} = await supabase.auth.getUser()
+      // console.log(user);
+      
+
+      const {data, error} = await supabase.from('loan_requests').select('*').eq('user_id', user.id)
+      if (error) throw error
+      if(data) {
+        setLoanReq(data || [])
+}       
+    } catch (error) {
+      console.log(error);
+      
+    }
+
+     
+  }
+
+  useEffect(() => {
+    fetchLoanRequests()
+  }, [])
+
+  const handleViewLoan = (loanId) => {
+    // <customModal />
+    navigate(`/loan-detail/${loanId}`);
   };
 
   return (
@@ -82,12 +126,12 @@ const LoanRequests = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {loanRequests.map((request) => (
+            {loanReq.map((request) => (
               <TableRow key={request.id}>
-                <TableCell>{request.id}</TableCell>
-                <TableCell>{request.fullName}</TableCell>
-                <TableCell>${request.loanAmount.toLocaleString()}</TableCell>
-                <TableCell>{request.loanPurpose}</TableCell>
+                <TableCell>{request.id.slice(2,4)}</TableCell>
+                <TableCell>{request.full_name}</TableCell>
+                <TableCell>${request.amount.toLocaleString()}</TableCell>
+                <TableCell>{request.purpose}</TableCell>
                 <TableCell>
                   <Chip 
                     label={request.status} 
@@ -95,11 +139,14 @@ const LoanRequests = () => {
                     size="small"
                   />
                 </TableCell>
-                <TableCell>{request.date}</TableCell>
+                <TableCell>{new Date(request.created_at).toLocaleDateString()}</TableCell>
                 <TableCell>
+                  <Button sx={{display: 'flex', gap: 1}} onClick={() => handleViewLoan(request.id)}>
                   <IconButton size="small" color="primary">
                     <IconEye size={20} />
                   </IconButton>
+                    Veiw Details
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}

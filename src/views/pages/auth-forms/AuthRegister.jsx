@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
@@ -18,18 +18,34 @@ import Box from '@mui/material/Box';
 
 // project imports
 import AnimateButton from 'ui-component/extended/AnimateButton';
+import { supabase } from '../../../service/supabase';
 
 // assets
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { Alert } from '@mui/material';
 
 // ===========================|| JWT - REGISTER ||=========================== //
 
 export default function AuthRegister() {
   const theme = useTheme();
 
+  const navigate = useNavigate(); 
+
   const [showPassword, setShowPassword] = useState(false);
   const [checked, setChecked] = useState(true);
+
+   // Form state
+   const [firstName, setFirstName] = useState('');
+   const [lastName, setLastName] = useState('');
+   const [email, setEmail] = useState('');
+   const [password, setPassword] = useState('');
+ 
+   // For loading and error handling
+   const [loading, setLoading] = useState(false);
+   const [error, setError] = useState(null);
+   const [successMessage, setSuccessMessage] = useState('');
+ 
 
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
@@ -37,6 +53,63 @@ export default function AuthRegister() {
 
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
+  };
+
+  const handleRegister = async (event) => {
+    event.preventDefault(); // Prevent default form submission
+    setError(null);
+    setSuccessMessage('');
+
+    if (!checked) {
+      setError('You must agree to the Terms & Conditions.');
+      return;
+    }
+
+    if (!firstName || !lastName || !email || !password) {
+      setError('All fields are required.');
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const { data, error: signUpError } = await supabase.auth.signUp({
+        email: email,
+        password: password,
+        options: {
+          data: {
+            first_name: firstName,
+            last_name: lastName,
+            // You can add other metadata here if needed
+          },
+        },
+      });
+
+      if (signUpError) {
+        throw signUpError;
+      }
+
+      // data.user will contain the user object if signup needs confirmation
+      // data.session will be null if email confirmation is required
+      // data.user will contain the user object and data.session the session if auto-confirm is on
+      console.log('Sign up successful, user:', data.user);
+
+      setSuccessMessage(
+        'Registration successful! Please check your email to confirm your account.'
+      );
+
+
+      setTimeout(() => {
+        navigate('/login'); 
+        
+      }, 4000);
+
+    } catch (err) {
+      console.error('Error signing up:', err);
+      setError(err.message || 'An unexpected error occurred. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -49,6 +122,19 @@ export default function AuthRegister() {
         </Grid>
       </Grid>
 
+      {error && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {error}
+        </Alert>
+      )}
+      {successMessage && (
+        <Alert severity="success" sx={{ mb: 2 }}>
+          {successMessage}
+        </Alert>
+      )}
+
+      <form action="" onSubmit={handleRegister}>
+
       <Grid container spacing={{ xs: 0, sm: 2 }}>
         <Grid size={{ xs: 12, sm: 6 }}>
           <TextField
@@ -57,7 +143,8 @@ export default function AuthRegister() {
             margin="normal"
             name="firstName"
             type="text"
-            value="Jhones"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)} // Handle change
             sx={{ ...theme.typography.customInput }}
           />
         </Grid>
@@ -68,14 +155,17 @@ export default function AuthRegister() {
             margin="normal"
             name="lastName"
             type="text"
-            value="Doe"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)} // Handle change
+
             sx={{ ...theme.typography.customInput }}
-          />
+            />
         </Grid>
       </Grid>
       <FormControl fullWidth sx={{ ...theme.typography.customInput }}>
         <InputLabel htmlFor="outlined-adornment-email-register">Email Address / Username</InputLabel>
-        <OutlinedInput id="outlined-adornment-email-register" type="email" value="jones@doe.com" name="email" inputProps={{}} />
+        <OutlinedInput id="outlined-adornment-email-register" type="email" value={email} name="email" inputProps={{}}               onChange={(e) => setEmail(e.target.value)}
+ />
       </FormControl>
 
       <FormControl fullWidth sx={{ ...theme.typography.customInput }}>
@@ -83,7 +173,9 @@ export default function AuthRegister() {
         <OutlinedInput
           id="outlined-adornment-password-register"
           type={showPassword ? 'text' : 'password'}
-          value="Jhones@123"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)} 
+
           name="password"
           label="Password"
           endAdornment={
@@ -94,13 +186,13 @@ export default function AuthRegister() {
                 onMouseDown={handleMouseDownPassword}
                 edge="end"
                 size="large"
-              >
+                >
                 {showPassword ? <Visibility /> : <VisibilityOff />}
               </IconButton>
             </InputAdornment>
           }
           inputProps={{}}
-        />
+          />
       </FormControl>
 
       <Grid container sx={{ alignItems: 'center', justifyContent: 'space-between' }}>
@@ -121,11 +213,12 @@ export default function AuthRegister() {
 
       <Box sx={{ mt: 2 }}>
         <AnimateButton>
-          <Button disableElevation fullWidth size="large" type="submit" variant="contained" color="secondary">
-            Sign up
+          <Button disableElevation fullWidth size="large" type="submit" variant="contained" color="secondary" disabled={loading}>
+            {loading ? 'signing up....' : 'Sign Up'}
           </Button>
         </AnimateButton>
       </Box>
+            </form>
     </>
   );
 }

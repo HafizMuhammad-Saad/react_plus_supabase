@@ -20,6 +20,8 @@ import Grid from '@mui/material/Grid';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
+import { supabase } from '../../service/supabase';
+import { useAuth } from '../../contexts/AuthContext';
 
 // ==============================|| LOAN REQUEST PAGE ||============================== //
 
@@ -63,6 +65,7 @@ const LoanRequest = () => {
 
   const [errors, setErrors] = useState({});
   const [openSnackbar, setOpenSnackbar] = useState(false);
+  const {user} = useAuth()
 
   const handleCloseSnackbar = (event, reason) => {
     if (reason === 'clickaway') {
@@ -105,6 +108,8 @@ const LoanRequest = () => {
   };
 
   const handleChange = (e) => {
+
+    
     const { name, value } = e.target;
     setFormData(prevState => ({
       ...prevState,
@@ -129,12 +134,39 @@ const LoanRequest = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateStep(activeStep)) {
       console.log('Form submitted:', formData);
       setOpenSnackbar(true);
       setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    }
+
+
+    try {
+      // const { data: { user } } = await supabase.auth.getUser();
+      const {data, error} = await supabase.from('loan_requests').insert({
+        user_id: user.id,
+              full_name: formData.fullName,
+              email: formData.email,
+              phone: formData.phone,
+              address: formData.address,
+              amount: parseFloat(formData.loanAmount),
+              purpose: formData.loanPurpose,
+              term: parseInt(formData.loanTerm),
+              employmentStatus: formData.employmentStatus,
+              monthlyIncome: formData.monthlyIncome,
+              employerName: formData.employerName,
+              jobTitle: formData.jobTitle,
+              status: 'pending',
+      }).select()
+
+
+      console.log('Data inserted successfully:', data);
+
+    } catch (error) {
+      console.log(error);
+      
     }
   };
 

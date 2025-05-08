@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
@@ -23,8 +23,41 @@ import GetAppTwoToneIcon from '@mui/icons-material/GetAppOutlined';
 import FileCopyTwoToneIcon from '@mui/icons-material/FileCopyOutlined';
 import PictureAsPdfTwoToneIcon from '@mui/icons-material/PictureAsPdfOutlined';
 import ArchiveTwoToneIcon from '@mui/icons-material/ArchiveOutlined';
+import { supabase } from '../../../service/supabase';
+import { useAuth } from '../../../contexts/AuthContext';
 
 export default function EarningCard({ isLoading }) {
+
+  const [amount, setAmount] = useState([])
+  const {user} = useAuth()
+
+  async function totalAmount() {
+    try {
+      
+      const {data, error} = await supabase.from('loan_requests').select('amount').eq("user_id",user.id)
+      
+      if (data) {
+        const total = data.reduce((amount, req) => {
+          return amount + req.amount
+        }, 0)
+        console.log(total);
+        setAmount(total)
+
+        
+        
+        // setAmount(data)
+      }
+    } catch (error) {
+      console.log(error);
+      
+    }
+    
+  }
+
+  useEffect(() => {
+    totalAmount()
+  }, [])
+
   const theme = useTheme();
 
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -142,7 +175,7 @@ export default function EarningCard({ isLoading }) {
               <Grid>
                 <Grid container sx={{ alignItems: 'center' }}>
                   <Grid>
-                    <Typography sx={{ fontSize: '2.125rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>$500.00</Typography>
+                    <Typography sx={{ fontSize: '2.125rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>${amount}</Typography>
                   </Grid>
                   <Grid>
                     <Avatar

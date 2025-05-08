@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Divider from '@mui/material/Divider';
@@ -14,10 +14,18 @@ import AuthLogin from '../auth-forms/AuthLogin';
 import Logo from 'ui-component/Logo';
 import AuthFooter from 'ui-component/cards/AuthFooter';
 
+import { useAuth } from '../../../contexts/AuthContext';
+import { useEffect } from 'react';
+
 // ================================|| AUTH3 - LOGIN ||================================ //
 
 export default function Login() {
   const downMD = useMediaQuery((theme) => theme.breakpoints.down('md'));
+
+  const {user} = useAuth()
+  const navigate = useNavigate()
+
+ 
 
   return (
     <AuthWrapper1>

@@ -18,6 +18,14 @@ const other = {
       icon: icons.IconBrandChrome,
       breadcrumbs: false
     },
+    {
+      id: 'contact-us',
+      title: 'Contact Page',
+      type: 'item',
+      url: '/contact-us',
+      icon: icons.IconHelp,
+      breadcrumbs: false
+    },
   ]
 };
 
