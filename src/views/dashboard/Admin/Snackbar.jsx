@@ -23,5 +23,3 @@ const CustomSnackbar = ({ open, message, severity, onClose }) => {
 };
 
 export default CustomSnackbar;
-
-

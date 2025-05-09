@@ -1,29 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { 
-  Box,
-  Typography,
-  Paper,
-  Grid,
-  Chip,
-  Link,
-  Button,
-  Divider,
-  Stack
-} from '@mui/material';
-import { 
-  ArrowBack,
-  Person,
-  Email,
-  Phone,
-  Home,
-  Work,
-  Description,
-  MonetizationOn,
-  Timelapse,
-  VerifiedUser
-} from '@mui/icons-material';
-import CircularProgress from '@mui/material';
+import { Box, Typography, Paper, Grid, Chip, Link, Button, Divider, Stack } from '@mui/material';
+import { ArrowBack, Person, Email, Phone, Home, Work, Description, MonetizationOn, Timelapse, VerifiedUser } from '@mui/icons-material';
+import {CircularProgress} from '@mui/material';
 import { useTheme } from '@mui/material/styles'; // Import useTheme hook
 
 import { supabase } from '../../service/supabase';
@@ -104,46 +83,39 @@ const LoanDetail = () => {
   if (error) {
     return (
       <Box sx={{ p: 3 }}>
-        <Alert severity="error">
-          Error loading loan details: {error.message}
-        </Alert>
+        <Alert severity="error">Error loading loan details: {error.message}</Alert>
       </Box>
     );
   }
 
   // If loan is null after loading and no error, it means not found
   if (!loan) {
-     return (
+    return (
       <Box sx={{ p: 3 }}>
-        <Alert severity="warning">
-          Loan request not found.
-        </Alert>
+        <Alert severity="warning">Loan request not found.</Alert>
       </Box>
-     );
+    );
   }
 
   // --- Render Loan Details ---
 
   return (
     <Box sx={{ p: 3 }}>
-      <Button 
-        startIcon={<ArrowBack />}
-        variant="outlined"
-        sx={{ mb: 3 }}
-        onClick={() => window.history.back()}
-      >
+      <Button startIcon={<ArrowBack />} variant="outlined" sx={{ mb: 3 }} onClick={() => window.history.back()}>
         Back
       </Button>
 
       <Paper elevation={3} sx={{ p: 3, borderRadius: 2 }}>
         <Stack spacing={3}>
           {/* Main Sections Container */}
-          <Box sx={{ 
-            display: 'flex',
-            flexDirection: { xs: 'column', md: 'row' },
-            gap: 3,
-            flexWrap: 'wrap'
-          }}>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: { xs: 'column', md: 'row' },
+              gap: 3,
+              flexWrap: 'wrap'
+            }}
+          >
             {/* Personal Details Column */}
             <SectionContainer title="Personal Information" icon={<Person />} color={theme.palette.primary.main}>
               <DetailItem label="Full Name" value={loan?.full_name} />
@@ -166,12 +138,9 @@ const LoanDetail = () => {
               <DetailItem label="Purpose" value={loan?.purpose} />
               <DetailItem label="Term" value={`${loan?.term} months`} />
               <DetailItem label="Status">
-                <Chip 
-                  label={loan?.status} 
-                  color={
-                    loan?.status === 'approved' ? 'success' : 
-                    loan?.status === 'pending' ? 'warning' : 'error'
-                  } 
+                <Chip
+                  label={loan?.status}
+                  color={loan?.status === 'approved' ? 'success' : loan?.status === 'pending' ? 'warning' : 'error'}
                   variant="outlined"
                 />
               </DetailItem>
@@ -189,16 +158,8 @@ const LoanDetail = () => {
 
           {/* Timestamps Row */}
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={3} justifyContent="space-between">
-            <DetailItem 
-              label="Created At" 
-              value={new Date(loan?.created_at).toLocaleString()} 
-              icon={<Timelapse fontSize="small" />}
-            />
-            <DetailItem 
-              label="Updated At" 
-              value={new Date(loan?.updated_at).toLocaleString()} 
-              icon={<VerifiedUser fontSize="small" />}
-            />
+            <DetailItem label="Created At" value={new Date(loan?.created_at).toLocaleString()} icon={<Timelapse fontSize="small" />} />
+            <DetailItem label="Updated At" value={new Date(loan?.updated_at).toLocaleString()} icon={<VerifiedUser fontSize="small" />} />
           </Stack>
         </Stack>
       </Paper>
@@ -208,21 +169,21 @@ const LoanDetail = () => {
 
 // Reusable Section Container Component
 const SectionContainer = ({ title, icon, color, children }) => (
-  <Box sx={{ 
-    flex: 1,
-    minWidth: 300,
-    p: 2,
-    borderRadius: 1,
-    border: `1px solid ${color}20`,
-    backgroundColor: `${color}08`
-  }}>
+  <Box
+    sx={{
+      flex: 1,
+      minWidth: 300,
+      p: 2,
+      borderRadius: 1,
+      border: `1px solid ${color}20`,
+      backgroundColor: `${color}08`
+    }}
+  >
     <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', color }}>
       {React.cloneElement(icon, { sx: { mr: 1 } })}
       {title}
     </Typography>
-    <Stack spacing={1.5}>
-      {children}
-    </Stack>
+    <Stack spacing={1.5}>{children}</Stack>
   </Box>
 );
 
@@ -245,12 +206,7 @@ const DetailItem = ({ label, value, children, icon }) => (
 const DocumentLink = ({ label, url }) => (
   <DetailItem label={label}>
     {url ? (
-      <Link 
-        href={url} 
-        target="_blank" 
-        rel="noopener noreferrer"
-        sx={{ cursor: 'pointer' }}
-      >
+      <Link href={url} target="_blank" rel="noopener noreferrer" sx={{ cursor: 'pointer' }}>
         View Document
       </Link>
     ) : (
@@ -259,7 +215,7 @@ const DocumentLink = ({ label, url }) => (
       </Typography>
     )}
   </DetailItem>
-)
+);
 
 // };
 

@@ -18,8 +18,7 @@ export default function Profile() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const {user} = useAuth()
-
+  const { user } = useAuth();
 
   const fetchProfile = useCallback(async () => {
     setLoading(true);
@@ -36,12 +35,12 @@ export default function Profile() {
         setAddress(user.user_metadata?.last_name || '');
         setEmail(user.email || user.user.user_metadata?.email || ''); // Fallback to user.email
       } else {
-         // Handle case where no user is logged in or data structure is unexpected
-         setError("Could not retrieve user data.");
+        // Handle case where no user is logged in or data structure is unexpected
+        setError('Could not retrieve user data.');
       }
     } catch (e) {
-      console.error("Error fetching profile:", e.message);
-      setError("Failed to load profile data.");
+      console.error('Error fetching profile:', e.message);
+      setError('Failed to load profile data.');
     } finally {
       setLoading(false);
     }
@@ -51,10 +50,10 @@ export default function Profile() {
   //   try {
   //     const {data, error} = await supabase.from('profiles').select()
   //     console.log(data);
-      
+
   //   } catch (error) {
   //     console.log(error);
-      
+
   //   }
   // }, [])
   useEffect(() => {
@@ -78,67 +77,72 @@ export default function Profile() {
     );
   }
 
-
   return (
     <MainCard title="User Profile">
       <Typography variant="h4" gutterBottom>
         Profile Information
       </Typography>
 
-      <Box sx={{ mt: 3 }}> {/* Add some top margin */}
-        <Grid container spacing={3}> {/* Use Grid for layout */}
+      <Box sx={{ mt: 3 }}>
+        {' '}
+        {/* Add some top margin */}
+        <Grid container spacing={3}>
+          {' '}
+          {/* Use Grid for layout */}
           {/* Name Field */}
-          <Grid item xs={12} sm={6}> {/* Takes full width on small screens, half on medium+ */}
+          <Grid item xs={12} sm={6}>
+            {' '}
+            {/* Takes full width on small screens, half on medium+ */}
             <TextField
               label="First Name"
               value={name}
               fullWidth
               InputProps={{
-                readOnly: true, // Make the field read-only for display
+                readOnly: true // Make the field read-only for display
               }}
               variant="outlined" // Use outlined variant for a professional look
             />
           </Grid>
-
           {/* Address Field (using last_name for now) */}
-          <Grid item xs={12} sm={6}> {/* Takes full width on small screens, half on medium+ */}
-             <TextField
+          <Grid item xs={12} sm={6}>
+            {' '}
+            {/* Takes full width on small screens, half on medium+ */}
+            <TextField
               label="Last Name / Address" // Updated label based on current data mapping
               value={address}
               fullWidth
               InputProps={{
-                readOnly: true,
+                readOnly: true
               }}
               variant="outlined"
             />
           </Grid>
-
           {/* Email Field */}
-          <Grid item xs={12}> {/* Takes full width always */}
+          <Grid item xs={12}>
+            {' '}
+            {/* Takes full width always */}
             <TextField
               label="Email Address"
               value={email}
               fullWidth
-               InputProps={{
-                readOnly: true,
+              InputProps={{
+                readOnly: true
               }}
               variant="outlined"
             />
           </Grid>
-
           <Grid item xs={12} sm={6}>
-             <TextField
+            <TextField
               label="Phone Number"
               value={phone}
-              onChange={(e) => {setPhone(e.target.value)}}
+              onChange={(e) => {
+                setPhone(e.target.value);
+              }}
               fullWidth
               variant="outlined"
             />
-
           </Grid>
-
         </Grid>
-
         {/* <Button onClick={updateProfile}>
           Edit Profile
         </Button> */}

@@ -25,7 +25,7 @@ const other = {
       url: '/contact-us',
       icon: icons.IconHelp,
       breadcrumbs: false
-    },
+    }
   ]
 };
 

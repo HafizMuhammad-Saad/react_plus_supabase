@@ -4,7 +4,7 @@ import { supabase } from '../service/supabase';
 const AuthContext = createContext({
   user: null,
   session: null,
-  loading: true,
+  loading: true
 });
 
 export const AuthProvider = ({ children }) => {
@@ -21,23 +21,19 @@ export const AuthProvider = ({ children }) => {
     });
 
     // Listen for auth state changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-        setLoading(false);
-      }
-    );
+    const {
+      data: { subscription }
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+      setLoading(false);
+    });
 
     // Cleanup subscription on unmount
     return () => subscription.unsubscribe();
   }, []);
 
-  return (
-    <AuthContext.Provider value={{ user, session, loading }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={{ user, session, loading }}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = () => useContext(AuthContext);

@@ -65,7 +65,7 @@ const LoanRequest = () => {
 
   const [errors, setErrors] = useState({});
   const [openSnackbar, setOpenSnackbar] = useState(false);
-  const {user} = useAuth()
+  const { user } = useAuth();
 
   const handleCloseSnackbar = (event, reason) => {
     if (reason === 'clickaway') {
@@ -76,7 +76,7 @@ const LoanRequest = () => {
 
   const validateStep = (step) => {
     const newErrors = {};
-    
+
     switch (step) {
       case 0:
         if (!formData.fullName.trim()) newErrors.fullName = 'Full name is required';
@@ -85,39 +85,37 @@ const LoanRequest = () => {
         if (!formData.phone.trim()) newErrors.phone = 'Phone number is required';
         if (!formData.address.trim()) newErrors.address = 'Address is required';
         break;
-      
+
       case 1:
         if (!formData.loanAmount) newErrors.loanAmount = 'Loan amount is required';
         if (!formData.loanPurpose) newErrors.loanPurpose = 'Loan purpose is required';
         if (!formData.loanTerm) newErrors.loanTerm = 'Loan term is required';
         break;
-      
+
       case 2:
         if (!formData.employmentStatus) newErrors.employmentStatus = 'Employment status is required';
         if (!formData.monthlyIncome) newErrors.monthlyIncome = 'Monthly income is required';
         if (!formData.employerName.trim()) newErrors.employerName = 'Employer name is required';
         if (!formData.jobTitle.trim()) newErrors.jobTitle = 'Job title is required';
         break;
-      
+
       default:
         break;
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleChange = (e) => {
-
-    
     const { name, value } = e.target;
-    setFormData(prevState => ({
+    setFormData((prevState) => ({
       ...prevState,
       [name]: value
     }));
     // Clear error when user starts typing
     if (errors[name]) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
         [name]: ''
       }));
@@ -142,31 +140,30 @@ const LoanRequest = () => {
       setActiveStep((prevActiveStep) => prevActiveStep + 1);
     }
 
-
     try {
       // const { data: { user } } = await supabase.auth.getUser();
-      const {data, error} = await supabase.from('loan_requests').insert({
-        user_id: user.id,
-              full_name: formData.fullName,
-              email: formData.email,
-              phone: formData.phone,
-              address: formData.address,
-              amount: parseFloat(formData.loanAmount),
-              purpose: formData.loanPurpose,
-              term: parseInt(formData.loanTerm),
-              employmentStatus: formData.employmentStatus,
-              monthlyIncome: formData.monthlyIncome,
-              employerName: formData.employerName,
-              jobTitle: formData.jobTitle,
-              status: 'pending',
-      }).select()
-
+      const { data, error } = await supabase
+        .from('loan_requests')
+        .insert({
+          user_id: user.id,
+          full_name: formData.fullName,
+          email: formData.email,
+          phone: formData.phone,
+          address: formData.address,
+          amount: parseFloat(formData.loanAmount),
+          purpose: formData.loanPurpose,
+          term: parseInt(formData.loanTerm),
+          employmentStatus: formData.employmentStatus,
+          monthlyIncome: formData.monthlyIncome,
+          employerName: formData.employerName,
+          jobTitle: formData.jobTitle,
+          status: 'pending'
+        })
+        .select();
 
       console.log('Data inserted successfully:', data);
-
     } catch (error) {
       console.log(error);
-      
     }
   };
 
@@ -254,12 +251,7 @@ const LoanRequest = () => {
             <Grid item xs={12} md={6}>
               <FormControl fullWidth required error={!!errors.loanPurpose}>
                 <InputLabel>Loan Purpose</InputLabel>
-                <Select
-                  name="loanPurpose"
-                  value={formData.loanPurpose}
-                  onChange={handleChange}
-                  label="Loan Purpose"
-                >
+                <Select name="loanPurpose" value={formData.loanPurpose} onChange={handleChange} label="Loan Purpose">
                   <MenuItem value="personal">Personal</MenuItem>
                   <MenuItem value="business">Business</MenuItem>
                   <MenuItem value="education">Education</MenuItem>
@@ -276,12 +268,7 @@ const LoanRequest = () => {
             <Grid item xs={12} md={6}>
               <FormControl fullWidth required error={!!errors.loanTerm}>
                 <InputLabel>Loan Term</InputLabel>
-                <Select
-                  name="loanTerm"
-                  value={formData.loanTerm}
-                  onChange={handleChange}
-                  label="Loan Term"
-                >
+                <Select name="loanTerm" value={formData.loanTerm} onChange={handleChange} label="Loan Term">
                   <MenuItem value="12">12 months</MenuItem>
                   <MenuItem value="24">24 months</MenuItem>
                   <MenuItem value="36">36 months</MenuItem>
@@ -304,12 +291,7 @@ const LoanRequest = () => {
             <Grid item xs={12} md={6}>
               <FormControl fullWidth required error={!!errors.employmentStatus}>
                 <InputLabel>Employment Status</InputLabel>
-                <Select
-                  name="employmentStatus"
-                  value={formData.employmentStatus}
-                  onChange={handleChange}
-                  label="Employment Status"
-                >
+                <Select name="employmentStatus" value={formData.employmentStatus} onChange={handleChange} label="Employment Status">
                   <MenuItem value="employed">Employed</MenuItem>
                   <MenuItem value="self-employed">Self Employed</MenuItem>
                   <MenuItem value="business">Business Owner</MenuItem>
@@ -371,7 +353,9 @@ const LoanRequest = () => {
       case 3:
         return (
           <Box sx={{ p: 2 }}>
-            <Typography variant="h6" gutterBottom>Review Your Information</Typography>
+            <Typography variant="h6" gutterBottom>
+              Review Your Information
+            </Typography>
             <Grid container spacing={2}>
               <Grid item xs={12} md={6}>
                 <Typography variant="subtitle2">Personal Information</Typography>
@@ -418,18 +402,10 @@ const LoanRequest = () => {
                 <Box sx={{ mb: 2 }}>
                   {renderStepContent(index)}
                   <Box sx={{ mt: 2, display: 'flex', justifyContent: 'space-between' }}>
-                    <Button
-                      disabled={index === 0}
-                      onClick={handleBack}
-                      sx={{ mt: 1, mr: 1 }}
-                    >
+                    <Button disabled={index === 0} onClick={handleBack} sx={{ mt: 1, mr: 1 }}>
                       Back
                     </Button>
-                    <Button
-                      variant="contained"
-                      onClick={index === steps.length - 1 ? handleSubmit : handleNext}
-                      sx={{ mt: 1, mr: 1 }}
-                    >
+                    <Button variant="contained" onClick={index === steps.length - 1 ? handleSubmit : handleNext} sx={{ mt: 1, mr: 1 }}>
                       {index === steps.length - 1 ? 'Submit' : 'Continue'}
                     </Button>
                   </Box>
@@ -473,9 +449,7 @@ const LoanRequest = () => {
             <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mr: 1 }}>
               Success!
             </Typography>
-            <Typography variant="body2">
-              Your loan request has been submitted successfully.
-            </Typography>
+            <Typography variant="body2">Your loan request has been submitted successfully.</Typography>
           </Box>
         </MuiAlert>
       </Snackbar>
@@ -483,4 +457,4 @@ const LoanRequest = () => {
   );
 };
 
-export default LoanRequest; 
+export default LoanRequest;

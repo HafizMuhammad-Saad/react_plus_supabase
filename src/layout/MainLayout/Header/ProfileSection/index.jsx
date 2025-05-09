@@ -46,31 +46,28 @@ export default function ProfileSection() {
   const [notification, setNotification] = useState(false);
   const [selectedIndex] = useState(-1);
   const [open, setOpen] = useState(false);
-  const [user, setUser] = useState('')
-  const navigate = useNavigate()
+  const [user, setUser] = useState('');
+  const navigate = useNavigate();
 
   // const { user, loadingUser, userError, refreshUser } = useContext(AppContext);
 
   async function fetchUser() {
-    const {data, error} = await supabase.auth.getUser()
+    const { data, error } = await supabase.auth.getUser();
 
-    if(data) {
-      
-      setUser(data.user.user_metadata.first_name)
-      
+    if (data) {
+      setUser(data.user.user_metadata.first_name);
     }
   }
 
   async function logoutFunc() {
-    const { error } = await supabase.auth.signOut()
-    if(error) throw error
+    const { error } = await supabase.auth.signOut();
+    if (error) throw error;
 
-    navigate('/login')
+    navigate('/login');
   }
   useEffect(() => {
-    fetchUser()
-  }, [])
-
+    fetchUser();
+  }, []);
 
   /**
    * anchorRef is used on different components and specifying one type leads to other components throwing an error
@@ -165,7 +162,6 @@ export default function ProfileSection() {
                         </Stack>
                         <Typography variant="subtitle2">Project Admin</Typography>
                       </Stack>
-                      
                     </Box>
                     <Box
                       sx={{
@@ -177,7 +173,6 @@ export default function ProfileSection() {
                         '&::-webkit-scrollbar': { width: 5 }
                       }}
                     >
-                      
                       <Divider />
                       <List
                         component="nav"
@@ -222,11 +217,13 @@ export default function ProfileSection() {
                           <ListItemIcon>
                             <IconLogout stroke={1.5} size="20px" />
                           </ListItemIcon>
-                          <ListItemText primary={<Typography variant="body2">
-                            <Button onClick={logoutFunc}>
-                            Logout
-                              </Button>
-                            </Typography>} />
+                          <ListItemText
+                            primary={
+                              <Typography variant="body2">
+                                <Button onClick={logoutFunc}>Logout</Button>
+                              </Typography>
+                            }
+                          />
                         </ListItemButton>
                       </List>
                     </Box>

@@ -57,16 +57,22 @@ const LoanDetailModal = ({ open, loan, onClose }) => {
               position: 'absolute',
               right: theme.spacing(1),
               top: theme.spacing(1),
-              color: (theme) => theme.palette.grey[500],
+              color: (theme) => theme.palette.grey[500]
             }}
           >
             <CloseIcon />
           </IconButton>
         ) : null}
       </DialogTitle>
-      <DialogContent dividers> {/* Add dividers between title, content, and actions */}
-        <Box sx={{ p: theme.spacing(2) }}> {/* Add padding inside content */}
-          <Grid container spacing={theme.spacing(4)}> {/* Use theme spacing for grid gaps */}
+      <DialogContent dividers>
+        {' '}
+        {/* Add dividers between title, content, and actions */}
+        <Box sx={{ p: theme.spacing(2) }}>
+          {' '}
+          {/* Add padding inside content */}
+          <Grid container spacing={theme.spacing(4)}>
+            {' '}
+            {/* Use theme spacing for grid gaps */}
             <Grid item size={{ xs: 12, sm: 6 }}>
               <Typography variant="h6" gutterBottom color="primary">
                 Applicant Information
@@ -84,7 +90,6 @@ const LoanDetailModal = ({ open, loan, onClose }) => {
                 <strong>Address:</strong> {loan.address}
               </Typography>
             </Grid>
-
             <Grid item size={{ xs: 12, sm: 6 }}>
               <Typography variant="h6" gutterBottom color="primary">
                 Loan Details
@@ -100,12 +105,7 @@ const LoanDetailModal = ({ open, loan, onClose }) => {
               </Typography>
               <Typography variant="body1" sx={{ mb: theme.spacing(1) }}>
                 <strong>Status:</strong>
-                <Chip
-                  label={loan.status}
-                  color={getStatusColor(loan.status)}
-                  size="small"
-                  sx={{ ml: theme.spacing(1) }}
-                />
+                <Chip label={loan.status} color={getStatusColor(loan.status)} size="small" sx={{ ml: theme.spacing(1) }} />
               </Typography>
               <Typography variant="body2" color="textSecondary" sx={{ mt: theme.spacing(2) }}>
                 <strong>{'Created At:'}</strong> {loan.created_at ? new Date(loan.created_at).toLocaleString() : 'N/A'}
@@ -114,7 +114,6 @@ const LoanDetailModal = ({ open, loan, onClose }) => {
                 <strong>{'Updated At:'}</strong> {loan.updated_at ? new Date(loan.updated_at).toLocaleString() : 'N/A'}
               </Typography>
             </Grid>
-
             <Grid item size={{ xs: 12, sm: 6 }}>
               <Typography variant="h6" gutterBottom color="primary">
                 Employment Information
@@ -132,7 +131,6 @@ const LoanDetailModal = ({ open, loan, onClose }) => {
                 <strong>Job Title:</strong> {loan.jobTitle || 'N/A'}
               </Typography>
             </Grid>
-
             <Grid item size={{ xs: 12 }}>
               <Divider sx={{ my: theme.spacing(3) }} />
               <Typography variant="h6" gutterBottom sx={{ mt: theme.spacing(2) }} color="primary">
@@ -140,27 +138,45 @@ const LoanDetailModal = ({ open, loan, onClose }) => {
               </Typography>
               <Grid container spacing={theme.spacing(3)}>
                 <Grid item size={{ xs: 12, sm: 4 }}>
-                  <Typography variant="body1"><strong>ID Proof:</strong></Typography>
+                  <Typography variant="body1">
+                    <strong>ID Proof:</strong>
+                  </Typography>
                   {loan.id_proof_url ? (
-                    <Link href={loan.id_proof_url} target="_blank" rel="noopener noreferrer">View Document</Link>
+                    <Link href={loan.id_proof_url} target="_blank" rel="noopener noreferrer">
+                      View Document
+                    </Link>
                   ) : (
-                    <Typography component="span" variant="body1" color="textSecondary">N/A</Typography>
+                    <Typography component="span" variant="body1" color="textSecondary">
+                      N/A
+                    </Typography>
                   )}
                 </Grid>
                 <Grid item size={{ xs: 12, sm: 4 }}>
-                  <Typography variant="body1"><strong>Income Proof:</strong></Typography>
+                  <Typography variant="body1">
+                    <strong>Income Proof:</strong>
+                  </Typography>
                   {loan.income_proof_url ? (
-                    <Link href={loan.income_proof_url} target="_blank" rel="noopener noreferrer">View Document</Link>
+                    <Link href={loan.income_proof_url} target="_blank" rel="noopener noreferrer">
+                      View Document
+                    </Link>
                   ) : (
-                    <Typography component="span" variant="body1" color="textSecondary">N/A</Typography>
+                    <Typography component="span" variant="body1" color="textSecondary">
+                      N/A
+                    </Typography>
                   )}
                 </Grid>
                 <Grid item size={{ xs: 12, sm: 4 }}>
-                  <Typography variant="body1"><strong>Address Proof:</strong></Typography>
+                  <Typography variant="body1">
+                    <strong>Address Proof:</strong>
+                  </Typography>
                   {loan.address_proof_url ? (
-                    <Link href={loan.address_proof_url} target="_blank" rel="noopener noreferrer">View Document</Link>
+                    <Link href={loan.address_proof_url} target="_blank" rel="noopener noreferrer">
+                      View Document
+                    </Link>
                   ) : (
-                    <Typography component="span" variant="body1" color="textSecondary">N/A</Typography>
+                    <Typography component="span" variant="body1" color="textSecondary">
+                      N/A
+                    </Typography>
                   )}
                 </Grid>
               </Grid>

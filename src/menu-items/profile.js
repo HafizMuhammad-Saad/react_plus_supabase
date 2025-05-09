@@ -17,7 +17,7 @@ const profile = {
       url: '/profile',
       icon: icons.IconUser,
       breadcrumbs: false
-    },
+    }
   ]
 };
 

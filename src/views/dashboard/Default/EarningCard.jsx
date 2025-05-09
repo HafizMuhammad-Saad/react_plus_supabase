@@ -27,36 +27,30 @@ import { supabase } from '../../../service/supabase';
 import { useAuth } from '../../../contexts/AuthContext';
 
 export default function EarningCard({ isLoading }) {
-
-  const [amount, setAmount] = useState([])
-  const {user} = useAuth()
+  const [amount, setAmount] = useState([]);
+  const { user } = useAuth();
 
   async function totalAmount() {
     try {
-      
-      const {data, error} = await supabase.from('loan_requests').select('amount').eq("user_id",user.id)
-      
+      const { data, error } = await supabase.from('loan_requests').select('amount').eq('user_id', user.id);
+
       if (data) {
         const total = data.reduce((amount, req) => {
-          return amount + req.amount
-        }, 0)
+          return amount + req.amount;
+        }, 0);
         console.log(total);
-        setAmount(total)
+        setAmount(total);
 
-        
-        
         // setAmount(data)
       }
     } catch (error) {
       console.log(error);
-      
     }
-    
   }
 
   useEffect(() => {
-    totalAmount()
-  }, [])
+    totalAmount();
+  }, []);
 
   const theme = useTheme();
 

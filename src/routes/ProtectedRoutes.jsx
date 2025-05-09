@@ -6,7 +6,7 @@ const ProtectedRoute = ({ element }) => {
   const { user, loading } = useAuth();
   const location = useLocation(); // Optional: to remember where they tried to go
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   // While loading, maybe render a spinner or null
   if (loading) {
@@ -15,9 +15,8 @@ const ProtectedRoute = ({ element }) => {
 
   // If authenticated, render the element
   if (user) {
-      // console.log(user);
+    // console.log(user);
     return element;
-    
   }
 
   // If not authenticated, redirect to the login page

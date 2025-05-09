@@ -10,7 +10,7 @@ import { useTheme } from '@mui/material/styles';
  * import logo from 'assets/images/logo.svg';
  *
  */
-import logo from 'assets/images/panchayati-raj-project-management-system-ppms-seeklogo.png'
+import logo from 'assets/images/panchayati-raj-project-management-system-ppms-seeklogo.png';
 
 // ==============================|| LOGO SVG ||============================== //
 
@@ -21,7 +21,7 @@ export default function Logo() {
     /**
      * if you want to use image instead of svg uncomment following, and comment out <svg> element.
      *
-    *
+     *
      * <img src={theme.palette.mode === ThemeMode.DARK ? logoDark : logo} alt="Berry" width="100" />
      */
     <img src={logo} alt="" width="100" />

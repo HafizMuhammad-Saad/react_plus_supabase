@@ -27,46 +27,39 @@ import { Alert } from '@mui/material';
 // ===============================|| JWT - LOGIN ||=============================== //
 
 export default function AuthLogin() {
+  const navigate = useNavigate();
 
-  const navigate = useNavigate()
-
-  const [email, setEmail] = useState('')
-  const [password, setPass] = useState('')
-  const [session, setSession] = useState(null)
-  const [error, setError] = useState('')
+  const [email, setEmail] = useState('');
+  const [password, setPass] = useState('');
+  const [session, setSession] = useState(null);
+  const [error, setError] = useState('');
 
   async function loginFunc() {
-
     try {
       let { data, error } = await supabase.auth.signInWithPassword({
         email: email,
         password: password
-      })
+      });
 
-      if (error) throw error
-        if (data) {
-        navigate('/dashboard/default')
-      } 
-
-      
+      if (error) throw error;
+      if (data) {
+        navigate('/dashboard/default');
+      }
     } catch (err) {
       setError(err.message || 'An unexpected error occurred. Please try again.');
       console.log(error);
-      
     }
-
   }
 
   useEffect(() => {
     const {
-      data: { subscription },
+      data: { subscription }
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session)
-    })
-    return () => subscription.unsubscribe()
-  }, [])
+      setSession(session);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
 
-  
   const theme = useTheme();
 
   const [checked, setChecked] = useState(true);
@@ -82,15 +75,21 @@ export default function AuthLogin() {
 
   return (
     <>
-
-{error && (
+      {error && (
         <Alert severity="error" sx={{ mb: 2 }}>
           {error}
         </Alert>
       )}
       <FormControl fullWidth sx={{ ...theme.typography.customInput }}>
         <InputLabel htmlFor="outlined-adornment-email-login">Email Address / Username</InputLabel>
-        <OutlinedInput id="outlined-adornment-email-login" type="email" value={email} name="email" inputProps={{}} onChange={(e) =>setEmail(e.target.value)} />
+        <OutlinedInput
+          id="outlined-adornment-email-login"
+          type="email"
+          value={email}
+          name="email"
+          inputProps={{}}
+          onChange={(e) => setEmail(e.target.value)}
+        />
       </FormControl>
 
       <FormControl fullWidth sx={{ ...theme.typography.customInput }}>

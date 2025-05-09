@@ -9,7 +9,7 @@ import ProtectedRoute from './ProtectedRoutes';
 // dashboard routing
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
 const DashboardAdmin = Loadable(lazy(() => import('views/dashboard/Admin')));
- 
+
 // utilities routing
 // const UtilsTypography = Loadable(lazy(() => import('views/utilities/Typography')));
 // const UtilsColor = Loadable(lazy(() => import('views/utilities/Color')));
@@ -60,12 +60,11 @@ const MainRoutes = {
     },
     {
       path: '/loan-requests',
-      element: <ProtectedRoute element={<LoanRequests />} />,
-      
+      element: <ProtectedRoute element={<LoanRequests />} />
     },
     {
       path: '/loan-request/create',
-      element: <ProtectedRoute element={<LoanRequest />} />,
+      element: <ProtectedRoute element={<LoanRequest />} />
     },
     {
       path: '/loan-requests/:id',

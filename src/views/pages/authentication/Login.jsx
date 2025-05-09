@@ -22,10 +22,8 @@ import { useEffect } from 'react';
 export default function Login() {
   const downMD = useMediaQuery((theme) => theme.breakpoints.down('md'));
 
-  const {user} = useAuth()
-  const navigate = useNavigate()
-
- 
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
   return (
     <AuthWrapper1>

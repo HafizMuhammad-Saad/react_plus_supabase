@@ -11,20 +11,23 @@ import ThemeCustomization from 'themes';
 // auth provider
 
 import { AuthProvider } from './contexts/AuthContext';
+import { Provider } from 'react-redux';
+import { store } from './app/store';
 
 // ==============================|| APP ||============================== //
 
 export default function App() {
   return (
     <ThemeCustomization>
-      <AuthProvider>
-
-      <NavigationScroll>
-        <>
-          <RouterProvider router={router} />
-        </>
-      </NavigationScroll>
-      </AuthProvider>
+      <Provider store={store}>
+        <AuthProvider>
+          <NavigationScroll>
+            <>
+              <RouterProvider router={router} />
+            </>
+          </NavigationScroll>
+        </AuthProvider>
+      </Provider>
     </ThemeCustomization>
   );
 }
