@@ -14,13 +14,12 @@ import Checkbox from '@mui/material/Checkbox';
 import AddTodo from '../../components/AddTodo';
 import Todos from '../../components/Todos';
 
-
 const GradientBox = styled(Box)(({ theme }) => ({
   background: `linear-gradient(45deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
   borderRadius: theme.shape.borderRadius,
   padding: theme.spacing(3),
   marginBottom: theme.spacing(4),
-  boxShadow: theme.shadows[4],
+  boxShadow: theme.shadows[4]
 }));
 // ==============================|| SAMPLE PAGE ||============================== //
 
@@ -132,25 +131,19 @@ export default function SamplePage() {
           Generate Password
         </Button> */}
       </Box>
-       <Container maxWidth="md" sx={{ py: 6 }}>
-      <GradientBox>
-        <Typography 
-          variant="h4" 
-          component="h1" 
-          color="white" 
-          fontWeight="bold"
-          gutterBottom
-        >
-          Redux Toolkit Todo Manager
-        </Typography>
-        <Typography variant="body1" color="white">
-          Organize your tasks efficiently with our professional todo system
-        </Typography>
-      </GradientBox>
+      <Container maxWidth="md" sx={{ py: 6 }}>
+        <GradientBox>
+          <Typography variant="h4" component="h1" color="white" fontWeight="bold" gutterBottom>
+            Redux Toolkit Todo Manager
+          </Typography>
+          <Typography variant="body1" color="white">
+            Organize your tasks efficiently with our professional todo system
+          </Typography>
+        </GradientBox>
 
-      <AddTodo />
-      <Todos />
-    </Container>
+        <AddTodo />
+        <Todos />
+      </Container>
     </MainCard>
   );
 }

@@ -35,6 +35,7 @@ import { IconLogout, IconSearch, IconSettings, IconUser } from '@tabler/icons-re
 import { supabase } from '../../../../service/supabase';
 import { Button } from '@mui/material';
 import { useNavigate } from 'react-router';
+import { useAuth } from '../../../../contexts/AuthContext';
 
 // ==============================|| PROFILE MENU ||============================== //
 
@@ -51,13 +52,14 @@ export default function ProfileSection() {
 
   // const { user, loadingUser, userError, refreshUser } = useContext(AppContext);
 
-  async function fetchUser() {
-    const { data, error } = await supabase.auth.getUser();
+ 
+  // async function fetchUser() {
+  //   const { data, error } = await supabase.auth.getUser();
 
-    if (data) {
-      setUser(data.user.user_metadata.first_name);
-    }
-  }
+  //   if (data) {
+  //     setUser(data.user.user_metadata.first_name);
+  //   }
+  // }
 
   async function logoutFunc() {
     const { error } = await supabase.auth.signOut();
@@ -65,8 +67,13 @@ export default function ProfileSection() {
 
     navigate('/login');
   }
+  const { user: userData } = useAuth();
   useEffect(() => {
-    fetchUser();
+    // fetchUser();
+
+  if (userData) {
+    setUser(userData.user_metadata.last_name);
+  }
   }, []);
 
   /**

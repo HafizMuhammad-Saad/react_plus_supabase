@@ -18,7 +18,7 @@ import Box from '@mui/material/Box';
 // project imports
 import AnimateButton from 'ui-component/extended/AnimateButton';
 import { supabase } from '../../../service/supabase';
-
+import { useAuth } from '../../../contexts/AuthContext';
 // assets
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
@@ -26,44 +26,26 @@ import { Alert } from '@mui/material';
 
 // ===============================|| JWT - LOGIN ||=============================== //
 
-export default function AuthLogin() {
+export default function AdminLogin() {
   const navigate = useNavigate();
-
-  const [email, setEmail] = useState('');
-  const [adminEmail, setAdminEmail] = useState('admin@gmail.com');
-  const [adminPass, setAdminPass] = useState('123456');
-  const [password, setPass] = useState('');
-  const [session, setSession] = useState(null);
   const [error, setError] = useState('');
 
+  const [adminEmail, setAdminEmail] = useState('admin@gmail.com');
+  const [adminPass, setAdminPass] = useState('123456');
+const {admin, setAdmin} = useAuth();
   async function loginFunc() {
     try {
-      let { data, error } = await supabase.auth.signInWithPassword({
-        email: email,
-        password: password
-      });
-
-      if (error) throw error;
-      if (data && email !== 'admin@gmail.com') {
-        navigate('/dashboard/default');
-      } 
-      if (email === adminEmail & password === adminPass) {
-        navigate('/dashboard/admin');
-        
+      if ((adminEmail === 'admin@gmail.com' || 'admin') && adminPass === '123456') {
+        setAdmin(true);
+        navigate('/admin/dashboard');
       }
     } catch (err) {
       setError(err.message || 'An unexpected error occurred. Please try again.');
-      console.log(error);
     }
   }
 
   useEffect(() => {
-    const {
-      data: { subscription }
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-    });
-    return () => subscription.unsubscribe();
+   
   }, []);
 
   const theme = useTheme();
@@ -91,10 +73,10 @@ export default function AuthLogin() {
         <OutlinedInput
           id="outlined-adornment-email-login"
           type="email"
-          value={email}
+          value={adminEmail}
           name="email"
           inputProps={{}}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(e) => setAdminEmail(e.target.value)}
         />
       </FormControl>
 
@@ -103,9 +85,9 @@ export default function AuthLogin() {
         <OutlinedInput
           id="outlined-adornment-password-login"
           type={showPassword ? 'text' : 'password'}
-          value={password}
+          value={adminPass}
           name="password"
-          onChange={(e) => setPass(e.target.value)}
+          onChange={(e) => setAdminPass(e.target.value)}
           endAdornment={
             <InputAdornment position="end">
               <IconButton
@@ -130,11 +112,6 @@ export default function AuthLogin() {
             control={<Checkbox checked={checked} onChange={(event) => setChecked(event.target.checked)} name="checked" color="primary" />}
             label="Keep me logged in"
           />
-        </Grid>
-        <Grid>
-          <Typography variant="subtitle1" component={Link} to="/forgot-password" color="secondary" sx={{ textDecoration: 'none' }}>
-            Forgot Password?
-          </Typography>
         </Grid>
       </Grid>
       <Box sx={{ mt: 2 }}>

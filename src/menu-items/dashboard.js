@@ -23,7 +23,7 @@ const dashboard = {
       id: 'admin',
       title: 'Admin',
       type: 'item',
-      url: '/dashboard/admin',
+      url: '/admin/dashboard',
       icon: icons.IconDashboardFilled,
       breadcrumbs: false
     }

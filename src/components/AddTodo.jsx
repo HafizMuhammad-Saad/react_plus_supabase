@@ -1,17 +1,5 @@
 import React, { useState } from 'react';
-import { 
-  Box, 
-  Container, 
-  TextField, 
-  Button, 
-  List, 
-  ListItem, 
-  ListItemText, 
-  IconButton, 
-  Typography,
-  Paper,
-  styled
-} from '@mui/material';
+import { Box, Container, TextField, Button, List, ListItem, ListItemText, IconButton, Typography, Paper, styled } from '@mui/material';
 import { Delete, Add } from '@mui/icons-material';
 import { useDispatch } from 'react-redux';
 import { addTodo } from '../features/todo/todoSlice';
@@ -22,18 +10,18 @@ const GradientBox = styled(Box)(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
   padding: theme.spacing(3),
   marginBottom: theme.spacing(4),
-  boxShadow: theme.shadows[4],
+  boxShadow: theme.shadows[4]
 }));
 
 const TodoListPaper = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(2),
   borderRadius: '12px',
   '&:hover': {
-    boxShadow: theme.shadows[6],
+    boxShadow: theme.shadows[6]
   },
   transition: theme.transitions.create(['box-shadow'], {
-    duration: theme.transitions.duration.short,
-  }),
+    duration: theme.transitions.duration.short
+  })
 }));
 
 const AddTodo = () => {
@@ -41,7 +29,7 @@ const AddTodo = () => {
   const dispatch = useDispatch();
 
   function addTodoHandler(e) {
-    e.preventDefault()
+    e.preventDefault();
     dispatch(addTodo(input));
     setInput('');
   }
@@ -67,7 +55,7 @@ const AddTodo = () => {
             px: 4,
             borderRadius: '8px',
             textTransform: 'none',
-            fontSize: '1rem',
+            fontSize: '1rem'
           }}
         >
           Add Task

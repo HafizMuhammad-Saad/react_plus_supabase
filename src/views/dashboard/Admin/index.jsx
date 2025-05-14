@@ -13,7 +13,12 @@ import {
   Typography,
   Button,
   Snackbar,
-  Alert
+  Alert,
+  Tooltip,
+  Menu,
+  MenuList,
+  MenuItem,
+  ListItemIcon
 } from '@mui/material';
 import { IconEye } from '@tabler/icons-react';
 // project imports
@@ -39,7 +44,7 @@ import { DataGrid } from '@mui/x-data-grid';
 
 // assets
 import StorefrontTwoToneIcon from '@mui/icons-material/StorefrontTwoTone';
-import { AccessTime, CancelOutlined, CheckCircleOutline } from '@mui/icons-material';
+import { AccessTime, Cancel, CancelOutlined, CheckCircle, CheckCircleOutline, MoreVert, Visibility } from '@mui/icons-material';
 
 // ==============================|| DEFAULT DASHBOARD ||============================== //
 
@@ -53,9 +58,11 @@ export default function Admin() {
 
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedLoan, setSelectedLoan] = useState(null); // To store the loan data for the modal
+  const [currentLoadingId, setCurrentLoadingId] = useState(null)
 
-  const { user } = useAuth();
+  const { user, admin, setAdmin } = useAuth();
 
+ 
   const navigate = useNavigate();
 
   const getStatusColor = (status) => {
@@ -115,20 +122,20 @@ export default function Admin() {
     setSnackbarOpen(true); // Open the snackbar
   };
 
-   const columns = [
+  const columns = [
     { field: 'id', headerName: 'ID', width: 90 },
     {
       field: 'full_name',
       headerName: 'Full name',
       width: 150,
-      editable: false,
+      editable: false
     },
     {
       field: 'amount',
       headerName: 'Loan amount',
       width: 150,
       type: Number,
-      valueFormatter: (params) => `$${params}`,
+      valueFormatter: (params) => `$${params}`
     },
     {
       field: 'purpose',
@@ -146,11 +153,7 @@ export default function Admin() {
           <Chip
             label={params.value}
             color={statusColor}
-            icon={
-              statusColor === 'success' ? <CheckCircleOutline /> :
-                statusColor === 'error' ? <CancelOutlined /> :
-                  <AccessTime />
-            }
+            icon={statusColor === 'success' ? <CheckCircleOutline /> : statusColor === 'error' ? <CancelOutlined /> : <AccessTime />}
             variant="filled"
             sx={{
               backgroundColor: `${statusColor}.light`,
@@ -172,34 +175,81 @@ export default function Admin() {
       headerAlign: 'center'
     },
     {
-      field: 'actions',
-      headerName: 'Actions',
-      width: 160,
-      editable: false,
-      renderCell: (params) => (
+  field: 'actions',
+  headerName: 'Actions',
+  width: 300, // Increased width to accommodate buttons
+  renderCell: (params) => {
+    const isProcessing = params.row.id === currentLoadingId;
+    
+    return (
+      <Box sx={{ 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'start', 
+        gap: 1,
+        width: '100%'
+      }}>
+        {/* View Details Button */}
         <Button
+          variant="outlined"
+          size="small"
+          color="primary"
+          startIcon={<IconEye size={20} />}
+          onClick={() => handleViewLoan(params.row)}
+          disabled={isProcessing}
           sx={{
-            display: 'flex',
-            gap: 1,
-            py: 1.9,
             textTransform: 'none',
-            color: 'primary.main',
-            '&:hover': {
-              backgroundColor: 'action.hover',
-            }
+            px: 2,
+            '&:hover': { backgroundColor: 'primary.light' }
           }}
-          onClick={() => handleViewLoan(params.row.id)}
         >
-          <IconEye size={20} />
           View Details
         </Button>
-      ),
-      sortable: false,
-      filterable: false,
-      disableColumnMenu: true,
-      align: 'center',
-      headerAlign: 'center'
-    },
+
+        {/* Approve Button */}
+        <Button
+          variant="contained"
+          color="success"
+          size="small"
+          onClick={() => updateStatus(params.row.id, 'approved', params.row.full_name)}
+          disabled={isProcessing}
+          sx={{
+            textTransform: 'none',
+            px: 2,
+            '&:hover': { backgroundColor: 'success.dark' }
+          }}
+        >
+          Approve
+        </Button>
+
+        {/* Reject Button */}
+        <Button
+          variant="contained"
+          color="error"
+          size="small"
+          onClick={() => updateStatus(params.row.id, 'rejected', params.row.full_name)}
+          disabled={isProcessing}
+          sx={{
+            textTransform: 'none',
+            px: 2,
+            '&:hover': { backgroundColor: 'error.dark' }
+          }}
+        >
+          Reject
+        </Button>
+
+        {/* Loading Indicator */}
+        {isProcessing && <CircularProgress size={24} sx={{ ml: 1 }} />}
+      </Box>
+    );
+  },
+  sortable: false,
+  filterable: false,
+  disableColumnMenu: true,
+  headerAlign: 'center',
+  align: 'center',
+  headerClassName: 'actions-header',
+}
   ];
 
   useEffect(() => {
@@ -227,6 +277,20 @@ export default function Admin() {
     }
     setSnackbarOpen(false);
   };
+
+  function logOut() {
+    setAdmin(false);
+    navigate('/admin');
+  }
+
+   if (!admin) {
+    return (
+      <MainCard title="Unauthorized Access">
+        <Typography variant="h6">You do not have permission to access this page.</Typography>
+      </MainCard>
+    );
+  }
+
   return (
     <MainCard title="Loan Requests">
       <Box sx={{ mb: 3, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -298,15 +362,24 @@ export default function Admin() {
           initialState={{
             pagination: {
               paginationModel: {
-                pageSize: 7,
-              },
-            },
+                pageSize: 7
+              }
+            }
           }}
           pageSizeOptions={[7]}
           checkboxSelection
           disableRowSelectionOnClick
         />
       </Box>
+
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={logOut}
+        sx={{ mt: 2 }}
+      >
+        Log Out
+      </Button>
 
       <CustomSnackbar open={snackbarOpen} message={snackbarMessage} severity={snackbarSeverity} onClose={handleCloseSnackbar} />
 

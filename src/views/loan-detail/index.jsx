@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Box, Typography, Paper, Grid, Chip, Link, Button, Divider, Stack } from '@mui/material';
 import { ArrowBack, Person, Email, Phone, Home, Work, Description, MonetizationOn, Timelapse, VerifiedUser } from '@mui/icons-material';
-import {CircularProgress} from '@mui/material';
+import { CircularProgress } from '@mui/material';
 import { useTheme } from '@mui/material/styles'; // Import useTheme hook
 
 import { supabase } from '../../service/supabase';

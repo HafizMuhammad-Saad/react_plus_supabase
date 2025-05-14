@@ -54,14 +54,14 @@ const LoanRequests = () => {
       field: 'full_name',
       headerName: 'Full name',
       width: 150,
-      editable: false,
+      editable: false
     },
     {
       field: 'amount',
       headerName: 'Loan amount',
       width: 150,
       type: Number,
-      valueFormatter: (params) => `$${params}`,
+      valueFormatter: (params) => `$${params}`
     },
     {
       field: 'purpose',
@@ -79,11 +79,7 @@ const LoanRequests = () => {
           <Chip
             label={params.value}
             color={statusColor}
-            icon={
-              statusColor === 'success' ? <CheckCircleOutline /> :
-                statusColor === 'error' ? <CancelOutlined /> :
-                  <AccessTime />
-            }
+            icon={statusColor === 'success' ? <CheckCircleOutline /> : statusColor === 'error' ? <CancelOutlined /> : <AccessTime />}
             variant="filled"
             sx={{
               backgroundColor: `${statusColor}.light`,
@@ -118,7 +114,7 @@ const LoanRequests = () => {
             textTransform: 'none',
             color: 'primary.main',
             '&:hover': {
-              backgroundColor: 'action.hover',
+              backgroundColor: 'action.hover'
             }
           }}
           onClick={() => handleViewLoan(params.row.id)}
@@ -132,7 +128,7 @@ const LoanRequests = () => {
       disableColumnMenu: true,
       align: 'center',
       headerAlign: 'center'
-    },
+    }
   ];
 
   async function fetchLoanRequests() {
@@ -208,9 +204,9 @@ const LoanRequests = () => {
           initialState={{
             pagination: {
               paginationModel: {
-                pageSize: 5,
-              },
-            },
+                pageSize: 5
+              }
+            }
           }}
           pageSizeOptions={[5]}
           checkboxSelection

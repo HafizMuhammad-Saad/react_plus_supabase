@@ -36,10 +36,10 @@ const MainRoutes = {
     {
       path: 'dashboard',
       children: [
-        {
-          path: 'admin',
-          element: <ProtectedRoute element={<DashboardAdmin />} />
-        },
+        // {
+        //   path: 'admin',
+        //   element: <DashboardAdmin />
+        // },
         {
           path: 'default',
           element: <ProtectedRoute element={<DashboardDefault />} />

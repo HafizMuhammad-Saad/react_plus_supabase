@@ -48,7 +48,7 @@ const LoanDetailModal = ({ open, loan, onClose }) => {
       fullWidth // Make it take full width up to maxWidth
     >
       <DialogTitle>
-        <Typography variant="h6">Loan Request Details (ID: {loan.id.slice()})</Typography>
+        <Typography variant="h6">Loan Request Details (ID: {loan.id})</Typography>
         {onClose ? (
           <IconButton
             aria-label="close"
