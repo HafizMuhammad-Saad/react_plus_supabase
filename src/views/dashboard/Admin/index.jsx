@@ -287,6 +287,21 @@ export default function Admin() {
     return (
       <MainCard title="Unauthorized Access">
         <Typography variant="h6">You do not have permission to access this page.</Typography>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => navigate('/admin')}
+          sx={{ mt: 2 }}
+        >
+          Go to Admin Login
+        </Button>
+        <Typography variant="body2" sx={{ mt: 1 }}>
+          Please log in as an admin to access this page.
+        </Typography>
+        <Typography variant="body2" sx={{ mt: 1 }}> 
+          If you are not an admin, please contact your administrator for access.
+        </Typography>
+        
       </MainCard>
     );
   }

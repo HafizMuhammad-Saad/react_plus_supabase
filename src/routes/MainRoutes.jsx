@@ -70,7 +70,18 @@ const MainRoutes = {
       path: '/loan-requests/:id',
       element: <ProtectedRoute element={<LoanDetail />} />
     }
-  ]
+  ],
+
+  // path: '/admin',
+  // element: <MainLayout />,
+  // children: [
+  //   {
+  //     path: 'admindashboard',
+  //     element: <ProtectedRoute element={<DashboardAdmin />} />
+  //   }
+  // ]
+
+  
 };
 
 export default MainRoutes;
