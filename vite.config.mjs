@@ -3,14 +3,17 @@ import react from '@vitejs/plugin-react';
 import jsconfigPaths from 'vite-jsconfig-paths';
 
 export default defineConfig(({ mode }) => {
+  // depending on your application, base can also be "/"
   const env = loadEnv(mode, process.cwd(), '');
-  const API_URL = env.VITE_APP_BASE_NAME || '/'; // Default to root if not set
+  const API_URL = `${env.VITE_APP_BASE_NAME}`;
+  const PORT = 3000;
 
   return {
-    base: API_URL, // Ensure this matches your deployment path
     server: {
+      // this ensures that the browser opens upon server start
       open: true,
-      port: 3000,
+      // this sets a default port to 3000
+      port: PORT,
       host: true
     },
     build: {
@@ -25,9 +28,23 @@ export default defineConfig(({ mode }) => {
     },
     resolve: {
       alias: {
+        // { find: '', replacement: path.resolve(__dirname, 'src') },
+        // {
+        //   find: /^~(.+)/,
+        //   replacement: path.join(process.cwd(), 'node_modules/$1')
+        // },
+        // {
+        //   find: /^src(.+)/,
+        //   replacement: path.join(process.cwd(), 'src/$1')
+        // }
+        // {
+        //   find: 'assets',
+        //   replacement: path.join(process.cwd(), 'src/assets')
+        // },
         '@tabler/icons-react': '@tabler/icons-react/dist/esm/icons/index.mjs'
       }
     },
+    base: API_URL,
     plugins: [react(), jsconfigPaths()]
   };
 });
