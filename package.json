@@ -3,6 +3,8 @@
   "version": "4.0.1",
   "private": true,
   "dependencies": {
+    "@copilotkit/react-core": "^1.8.12",
+    "@copilotkit/react-ui": "^1.8.12",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@fontsource/inter": "5.1.0",

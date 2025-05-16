@@ -160,6 +160,13 @@ const LoanRequests = () => {
         <Typography variant="h6">All Loan Requests</Typography>
       </Box>
 
+      <Box sx={{ mb: 3, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Typography variant="subtitle1">Total Loan Requests: {loanReq.length}</Typography>
+        <Button variant="contained" color="primary" onClick={() => navigate('/loan-request/create')}>
+          Create New Loan Request
+        </Button>
+      </Box>
+
       {/* <TableContainer component={Paper}>
         <Table>
           <TableHead>

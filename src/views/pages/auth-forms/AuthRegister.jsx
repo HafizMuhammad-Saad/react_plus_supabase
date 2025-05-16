@@ -88,6 +88,27 @@ export default function AuthRegister() {
         throw signUpError;
       }
 
+      const { data: usersData, error: usersError } = await supabase
+        .from("profiles")
+        .insert({
+          id: data.user.id,
+          first_name: firstName,
+          last_name: lastName,
+          email: email,
+        })
+        .select();
+
+      if (usersError) {
+        console.log('Error inserting user data:', usersError);
+        await supabase.auth.admin.deleteUser(data.user.id); // Rollback user creation
+        setError('Error inserting user data. Please try again.');
+
+        return;
+
+      }
+      console.log('User data inserted successfully:', usersData);
+
+
       // data.user will contain the user object if signup needs confirmation
       // data.session will be null if email confirmation is required
       // data.user will contain the user object and data.session the session if auto-confirm is on

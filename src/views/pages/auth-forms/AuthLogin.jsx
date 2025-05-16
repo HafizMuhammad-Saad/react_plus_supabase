@@ -29,10 +29,10 @@ import { Alert } from '@mui/material';
 export default function AuthLogin() {
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState('test1@mailinator.com');
   const [adminEmail, setAdminEmail] = useState('admin@gmail.com');
   const [adminPass, setAdminPass] = useState('123456');
-  const [password, setPass] = useState('');
+  const [password, setPass] = useState('123456');
   const [session, setSession] = useState(null);
   const [error, setError] = useState('');
 

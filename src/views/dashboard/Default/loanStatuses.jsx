@@ -26,22 +26,55 @@ import ArchiveTwoToneIcon from '@mui/icons-material/ArchiveOutlined';
 import { supabase } from '../../../service/supabase';
 import { useAuth } from '../../../contexts/AuthContext';
 
-export default function EarningCard({ isLoading}) {
-  const [amount, setAmount] = useState([]);
+export default function EarningCard2({ isLoading}) {
+ const [stats, setStats] = useState({
+    total: 0,
+    approved: 0,
+    rejected: 0,
+    pending: 0,
+    totalAmount: 0,
+    approvedAmount: 0,
+    rejectedAmount: 0,
+    pendingAmount: 0
+  });
   const { user } = useAuth();
 
-  async function totalAmount() {
+  async function fetchStats() {
     try {
-      const { data, error } = await supabase.from('loan_requests').select('amount').eq('user_id', user.id);
+      const { data, error } = await supabase
+        .from('loan_requests')
+        .select('amount,status')
+        .eq('user_id', user.id);
 
       if (data) {
-        const total = data.reduce((amount, req) => {
-          return amount + req.amount;
-        }, 0);
-        console.log(total);
-        setAmount(total);
+        let total = data.length;
+        let approved = 0, rejected = 0, pending = 0;
+        let totalAmount = 0, approvedAmount = 0, rejectedAmount = 0, pendingAmount = 0;
 
-        // setAmount(data)
+        data.forEach(req => {
+          totalAmount += req.amount || 0;
+          if (req.status === 'approved') {
+            approved++;
+            approvedAmount += req.amount || 0;
+          } else if (req.status === 'rejected') {
+            rejected++;
+            rejectedAmount += req.amount || 0;
+          } else if (req.status === 'pending') {
+            pending++;
+            pendingAmount += req.amount || 0;
+          }
+        });
+
+        setStats({
+          total,
+          approved,
+          rejected,
+          pending,
+          totalAmount,
+          approvedAmount,
+          rejectedAmount,
+          pendingAmount
+        });
       }
     } catch (error) {
       console.log(error);
@@ -49,7 +82,8 @@ export default function EarningCard({ isLoading}) {
   }
 
   useEffect(() => {
-    totalAmount();
+    fetchStats();
+    // eslint-disable-next-line
   }, []);
 
   const theme = useTheme();
@@ -166,36 +200,29 @@ export default function EarningCard({ isLoading}) {
                   </Grid>
                 </Grid>
               </Grid>
+               <Box sx={{ p: 2.25 }}>
+            <Grid container direction="column">
+              {/* ...existing avatar/menu code... */}
               <Grid>
-                <Grid container sx={{ alignItems: 'center' }}>
-                  <Grid>
-                    <Typography sx={{ fontSize: '2.125rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>${amount}</Typography>
-                  </Grid>
-                  <Grid>
-                    <Avatar
-                      sx={{
-                        cursor: 'pointer',
-                        ...theme.typography.smallAvatar,
-                        bgcolor: 'secondary.200',
-                        color: 'secondary.dark'
-                      }}
-                    >
-                      <ArrowUpwardIcon fontSize="inherit" sx={{ transform: 'rotate3d(1, 1, 1, 45deg)' }} />
-                    </Avatar>
-                  </Grid>
-                </Grid>
-              </Grid>
-              <Grid sx={{ mb: 1.25 }}>
-                <Typography
-                  sx={{
-                    fontSize: '1rem',
-                    fontWeight: 500,
-                    color: 'secondary.200'
-                  }}
-                >
-                  Total Loan Amount
+                <Typography sx={{ fontSize: '1.25rem', fontWeight: 600, mb: 1 }}>
+                  Total Requests: {stats.total}
+                </Typography>
+                <Typography sx={{ fontSize: '1.25rem', fontWeight: 600, mb: 1 }}>
+                  Approved: {stats.approved} (${stats.approvedAmount})
+                </Typography>
+                <Typography sx={{ fontSize: '1.25rem', fontWeight: 600, mb: 1 }}>
+                  Pending: {stats.pending} (${stats.pendingAmount})
+                </Typography>
+                <Typography sx={{ fontSize: '1.25rem', fontWeight: 600, mb: 1 }}>
+                  Rejected: {stats.rejected} (${stats.rejectedAmount})
+                </Typography>
+                <Typography sx={{ fontSize: '1.25rem', fontWeight: 600, mb: 1 }}>
+                  Total Amount: ${stats.totalAmount}
                 </Typography>
               </Grid>
+              {/* ...rest of your card... */}
+            </Grid>
+          </Box>
             </Grid>
           </Box>
         </MainCard>
@@ -204,4 +231,4 @@ export default function EarningCard({ isLoading}) {
   );
 }
 
-EarningCard.propTypes = { isLoading: PropTypes.bool };
+EarningCard2.propTypes = { isLoading: PropTypes.bool };

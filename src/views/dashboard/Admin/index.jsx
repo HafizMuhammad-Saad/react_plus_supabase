@@ -25,10 +25,12 @@ import { IconEye } from '@tabler/icons-react';
 import MainCard from 'ui-component/cards/MainCard';
 import { supabase } from '../../../service/supabase';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import CustomSnackbar from './Snackbar';
 import LoanDetailModal from './LoanModal';
 import { useAuth } from '../../../contexts/AuthContext';
+import { useCopilotReadable } from "@copilotkit/react-core";
+
 // import LoanDetail from '/views/loan-detail'
 
 // project imports
@@ -45,11 +47,13 @@ import { DataGrid } from '@mui/x-data-grid';
 // assets
 import StorefrontTwoToneIcon from '@mui/icons-material/StorefrontTwoTone';
 import { AccessTime, Cancel, CancelOutlined, CheckCircle, CheckCircleOutline, MoreVert, Visibility } from '@mui/icons-material';
+import User from './User';
 
 // ==============================|| DEFAULT DASHBOARD ||============================== //
 
 export default function Admin() {
   const [isLoading, setLoading] = useState(true);
+  const [allUsers, setAllUsers] = useState([]);
   const [loanReq, setLoanReq] = useState([]);
   const [snackbarOpen, setSnackbarOpen] = useState(false); // State for Snackbar open/close
 
@@ -62,7 +66,7 @@ export default function Admin() {
 
   const { user, admin, setAdmin } = useAuth();
 
- 
+
   const navigate = useNavigate();
 
   const getStatusColor = (status) => {
@@ -91,6 +95,25 @@ export default function Admin() {
 
     setOpen(false);
   };
+
+  useCopilotReadable({
+    description: "The loan requests data",
+    value: loanReq,
+  });
+
+  // async function listUsers() {
+  //   try {
+  //     const { data, error } = await supabase.from('profiles').select('*');
+  //     if (error) throw error;
+  //     console.log(data);
+  //     if (data) {
+  //       setAllUsers(data || []);
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
+
   async function fetchLoanRequests() {
     try {
       // console.log(user);
@@ -175,85 +198,117 @@ export default function Admin() {
       headerAlign: 'center'
     },
     {
-  field: 'actions',
-  headerName: 'Actions',
-  width: 300, // Increased width to accommodate buttons
-  renderCell: (params) => {
-    const isProcessing = params.row.id === currentLoadingId;
-    
-    return (
-      <Box sx={{ 
-        display: 'flex', 
-        alignItems: 'center', 
-        justifyContent: 'start', 
-        gap: 1,
-        width: '100%'
-      }}>
-        {/* View Details Button */}
-        <Button
-          variant="outlined"
-          size="small"
-          color="primary"
-          startIcon={<IconEye size={20} />}
-          onClick={() => handleViewLoan(params.row)}
-          disabled={isProcessing}
-          sx={{
-            textTransform: 'none',
-            px: 2,
-            '&:hover': { backgroundColor: 'primary.light' }
-          }}
-        >
-          View Details
-        </Button>
+      field: 'actions',
+      headerName: 'Actions',
+      width: 300, // Increased width to accommodate buttons
+      renderCell: (params) => {
+        const isProcessing = params.row.id === currentLoadingId;
 
-        {/* Approve Button */}
-        <Button
-          variant="contained"
-          color="success"
-          size="small"
-          onClick={() => updateStatus(params.row.id, 'approved', params.row.full_name)}
-          disabled={isProcessing}
-          sx={{
-            textTransform: 'none',
-            px: 2,
-            '&:hover': { backgroundColor: 'success.dark' }
-          }}
-        >
-          Approve
-        </Button>
+        return (
+          <Box sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'start',
+            gap: 1,
+            width: '100%'
+          }}>
+            {/* View Details Button */}
+            <Button
+              variant="outlined"
+              size="small"
+              color="primary"
+              startIcon={<IconEye size={20} />}
+              onClick={() => handleViewLoan(params.row)}
+              disabled={isProcessing}
+              sx={{
+                textTransform: 'none',
+                px: 2,
+                '&:hover': { backgroundColor: 'primary.light' }
+              }}
+            >
+              View Details
+            </Button>
 
-        {/* Reject Button */}
-        <Button
-          variant="contained"
-          color="error"
-          size="small"
-          onClick={() => updateStatus(params.row.id, 'rejected', params.row.full_name)}
-          disabled={isProcessing}
-          sx={{
-            textTransform: 'none',
-            px: 2,
-            '&:hover': { backgroundColor: 'error.dark' }
-          }}
-        >
-          Reject
-        </Button>
+            {/* Approve Button */}
+            <Button
+              variant="contained"
+              color="success"
+              size="small"
+              onClick={() => updateStatus(params.row.id, 'approved', params.row.full_name)}
+              disabled={isProcessing}
+              sx={{
+                textTransform: 'none',
+                px: 2,
+                '&:hover': { backgroundColor: 'success.dark' }
+              }}
+            >
+              Approve
+            </Button>
 
-        {/* Loading Indicator */}
-        {isProcessing && <CircularProgress size={24} sx={{ ml: 1 }} />}
-      </Box>
-    );
-  },
-  sortable: false,
-  filterable: false,
-  disableColumnMenu: true,
-  headerAlign: 'center',
-  align: 'center',
-  headerClassName: 'actions-header',
-}
+            {/* Reject Button */}
+            <Button
+              variant="contained"
+              color="error"
+              size="small"
+              onClick={() => updateStatus(params.row.id, 'rejected', params.row.full_name)}
+              disabled={isProcessing}
+              sx={{
+                textTransform: 'none',
+                px: 2,
+                '&:hover': { backgroundColor: 'error.dark' }
+              }}
+            >
+              Reject
+            </Button>
+
+            {/* Loading Indicator */}
+            {isProcessing && <CircularProgress size={24} sx={{ ml: 1 }} />}
+          </Box>
+        );
+      },
+      sortable: false,
+      filterable: false,
+      disableColumnMenu: true,
+      headerAlign: 'center',
+      align: 'center',
+      headerClassName: 'actions-header',
+    }
   ];
+
+  //   const columnsUsers = [
+  //   { field: 'id', headerName: 'ID', width: 90 },
+  //   {
+  //     field: 'first_name',
+  //     headerName: 'First name',
+  //     width: 150,
+  //     editable: true,
+  //   },
+  //   {
+  //     field: 'last_name',
+  //     headerName: 'Last name',
+  //     width: 150,
+  //     editable: true,
+  //   },
+  //   {
+  //     field: 'email',
+  //     headerName: 'email',
+  //     type: 'number',
+  //     width: 110,
+  //     editable: true,
+  //   },
+  //   {
+  //     field: 'fullName',
+  //     headerName: 'Full name',
+  //     description: 'This column has a value getter and is not sortable.',
+  //     sortable: false,
+  //     width: 160,
+  //     valueGetter: (value, row) => `${row.first_name || ''} ${row.last_name || ''}`,
+  //   },
+  // ];
 
   useEffect(() => {
     fetchLoanRequests();
+    //  listUsers();
   }, []);
 
   //   const handleViewLoan = (loanId) => {
@@ -283,7 +338,7 @@ export default function Admin() {
     navigate('/admin');
   }
 
-   if (!admin) {
+  if (!admin) {
     return (
       <MainCard title="Unauthorized Access">
         <Typography variant="h6">You do not have permission to access this page.</Typography>
@@ -298,10 +353,10 @@ export default function Admin() {
         <Typography variant="body2" sx={{ mt: 1 }}>
           Please log in as an admin to access this page.
         </Typography>
-        <Typography variant="body2" sx={{ mt: 1 }}> 
+        <Typography variant="body2" sx={{ mt: 1 }}>
           If you are not an admin, please contact your administrator for access.
         </Typography>
-        
+
       </MainCard>
     );
   }
@@ -386,6 +441,29 @@ export default function Admin() {
           disableRowSelectionOnClick
         />
       </Box>
+      {/* <Box sx={{ height: 500, width: '100%' }}>
+        <DataGrid
+          rows={allUsers}
+          columns={columnsUsers}
+          initialState={{
+            pagination: {
+              paginationModel: {
+                pageSize: 7
+              }
+            }
+          }}
+          pageSizeOptions={[7]}
+          checkboxSelection
+          disableRowSelectionOnClick
+        />
+      </Box> */}
+
+      <Button onClick={() => navigate('/admin/users')} variant="contained" color="primary" sx={{ mt: 2 }}>
+        <StorefrontTwoToneIcon sx={{ ml: 1 }} />
+        All Users      </Button>
+
+
+
 
       <Button
         variant="contained"
