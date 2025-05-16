@@ -72,6 +72,8 @@ export default function ProfileSection() {
     // fetchUser();
 
   if (userData) {
+    // console.log(userData.user_metadata.first_name);
+    
     setUser(userData.user_metadata.last_name);
   }
   }, []);
@@ -167,7 +169,7 @@ export default function ProfileSection() {
                             {user}
                           </Typography>
                         </Stack>
-                        <Typography variant="subtitle2">Project Admin</Typography>
+                        <Typography variant="subtitle2">User</Typography>
                       </Stack>
                     </Box>
                     <Box
@@ -220,14 +222,14 @@ export default function ProfileSection() {
                             }
                           />
                         </ListItemButton> */}
-                        <ListItemButton sx={{ borderRadius: `${borderRadius}px` }} selected={selectedIndex === 4}>
+                        <ListItemButton sx={{ borderRadius: `${borderRadius}px` }} selected={selectedIndex === 4}  onClick={logoutFunc}>
                           <ListItemIcon>
                             <IconLogout stroke={1.5} size="20px" />
                           </ListItemIcon>
                           <ListItemText
                             primary={
                               <Typography variant="body2">
-                                <Button onClick={logoutFunc}>Logout</Button>
+                                <Button>Logout</Button>
                               </Typography>
                             }
                           />
