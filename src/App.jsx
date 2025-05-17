@@ -23,26 +23,26 @@ export default function App() {
     <ThemeCustomization>
       <Provider store={store}>
         <AuthProvider>
-               <CopilotKit publicApiKey='ck_pub_e5e86c7a2e43b9969174d13fc684f241'>
-
-             
-          <NavigationScroll>
-            
+          <CopilotKit publicApiKey='ck_pub_e5e86c7a2e43b9969174d13fc684f241'>
 
 
-            <>
-              <RouterProvider router={router} />
-            </>
+            <NavigationScroll>
 
-<CopilotPopup
+
+
+              <>
+                <RouterProvider router={router} />
+              </>
+
+              <CopilotPopup
                 instructions={"You are assisting the user as best as you can."}
                 labels={{
                   title: "Popup Assistant",
                   initial: "Need any help?",
                 }}
               />
-          </NavigationScroll>
-               </CopilotKit>
+            </NavigationScroll>
+          </CopilotKit>
         </AuthProvider>
       </Provider>
     </ThemeCustomization>
